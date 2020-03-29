@@ -7,14 +7,14 @@
 from setuptools import setup
 from setuptools.command.install import install
 import os, shutil
-
-__version__ = "0.1.0"
+import versioneer
 
 
 if __name__ == "__main__":
     setup(
         name="event",
-        version=__version__,
+        version=versioneer.get_version(),
+        cmdclass=versioneer.get_cmdclass(),
         packages=[
             "event", 
         ],

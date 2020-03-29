@@ -23,6 +23,10 @@ To install the `event-cli`, simply install directly from pip over ssh:
 
 ```sh
 $ pip install -U git+ssh://git@github.com/dhhagan/event-cli.git@<version-or-branch>
+
+or
+
+$ pip install -U git+https://github.com/dhhagan/event-cli.git@<version-or-branch>
 ```
 
 *the below section is likely not needed*

@@ -85,3 +85,28 @@ Options:
 ```sh
 $ event-cli log --port /dev/cu.usbmodem14441 --fpath "test.csv"
 ```
+
+
+#### Unit testing the hardware
+
+This function runs an automated testing protocol and logs all parameters to file.
+
+```sh
+$ event-cli test [OPTIONS]
+```
+
+```sh
+Options:
+  --port TEXT           The port the Arduino is connected to  [required]
+  --delay INTEGER       The number of seconds each test should last
+  --baud INTEGER        The baudrate
+  --timeout INTEGER     The serial timeout
+  --fpath, TEXT         The file path where data will be stored
+  --help                Show this message and exit.
+```
+
+**Example**
+
+```sh
+$ event-cli test --port /dev/cu.usbmodem14441 --fpath "test-data.csv"
+```

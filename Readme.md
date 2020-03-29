@@ -108,5 +108,5 @@ Options:
 **Example**
 
 ```sh
-$ event-cli test --port /dev/cu.usbmodem14441 --fpath "test-data.csv"
+$ event-cli test --delay 20 --port /dev/cu.usbmodem14441 --fpath "test-data.csv"
 ```

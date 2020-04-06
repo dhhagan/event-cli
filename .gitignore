@@ -6,6 +6,7 @@ __pycache__/
 *.csv
 *.DS_Store
 *.ipynb
+test-config.yaml
 
 *.vscode
 /pressure-testing

@@ -102,6 +102,7 @@ Options:
   --baud INTEGER        The baudrate
   --timeout INTEGER     The serial timeout
   --fpath, TEXT         The file path where data will be stored
+  --config, TEXT        Path to the yaml config file with settings to iterate over
   --help                Show this message and exit.
 ```
 
@@ -110,3 +111,17 @@ Options:
 ```sh
 $ event-cli test --delay 20 --port /dev/cu.usbmodem14441 --fpath "test-data.csv"
 ```
+
+**YAML Config File**
+
+If you would like to provide a special configuration file with custom test ranges for BPM, Tidal Volume, and IE Ratio, it should be structured in Yet Another Markup Language (YAML) format. It should have three keys: *ie_ratio*, *beats_per_minute*, and *tidal_volume*. An example files looks like:
+
+**config.yaml**
+
+```yaml
+beats_per_minute: [5, 10, 15, 20, 25, 30, 35, 40]
+tidal_volume: [100, 200, 300, 400, 500, 600, 700, 800]
+ie_ratio: [1, 2, 3, 4]
+```
+
+Once the file is created, you can force the test script to use it using the `config` flag as documented above.

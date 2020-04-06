@@ -34,7 +34,7 @@ def log(port, baud, timeout, fpath, stream, headers):
     # open a file for writing
     with open(fpath, "w") as fobj:
         # write the header
-        fobj.write("t{}\n".format(headers))
+        fobj.write("{}\n".format(headers))
         fobj.flush()
 
         # run a loop and read/write
@@ -59,21 +59,38 @@ def log(port, baud, timeout, fpath, stream, headers):
 @click.option("--baud", default=115200, help="The baudrate", type=int, required=False)
 @click.option("--timeout", default=1, help="The serial timeout", type=int, required=False)
 @click.option("--fpath", default="test-steps.csv", help="The file path where data will be stored", type=str)
-def test(delay, port, baud, timeout, fpath):
+@click.option("--config", default=None, help="Path to the yaml config file with settings to iterate over", type=str, required=False)
+def test(delay, port, baud, timeout, fpath, config):
     """Run unittests on the hardware
     """
     import itertools
     from datetime import datetime
     import serial
     import time
-
-    # ie_options = [1, 2, 3, 4]
-    # tv_options = [100, 200, 300, 400, 500, 600, 700, 800]
-    # bpm_options = [10, 15, 20, 25, 30, 35, 40]
-
+    import yaml
+ 
+    # try parsing the YAML file if present, else use these settings
     ie_options = [1, 4]
     tv_options = [250, 750, 1325]
     bpm_options = [10, 40]
+
+    if config:
+        try:
+            with open(config, "r") as stream:
+                values = yaml.safe_load(stream)
+
+                # get the IE Ratio values
+                ie_options = values.get("ie_ratio", ie_options)
+                tv_options = values.get("tidal_volume", tv_options)
+                bpm_options = values.get("beats_per_minute", bpm_options)
+        except Exception as e:
+            print ("Error loading the config file")
+            print (e)
+
+    # make sure everything is kosher
+    assert isinstance(ie_options, list), "Invalid type for IE Ratio options"
+    assert isinstance(tv_options, list), "Invalid type for Tidal Volume options"
+    assert isinstance(bpm_options, list), "Invalid type for BPM options"
 
     options = list(itertools.product(*[ie_options, tv_options, bpm_options]))
 

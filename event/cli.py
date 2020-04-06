@@ -17,7 +17,8 @@ def cli():
 @click.option("--timeout", default=1, help="The serial timeout", type=int, required=False)
 @click.option("--fpath", default="data.csv", help="The file path where data will be stored", type=str)
 @click.option("--stream", default=True, help="Print output to serial?", type=bool)
-def log(port, baud, timeout, fpath, stream):
+@click.option("--headers", default="Timestamp,Millis,State,Mode,Pos,Vol,BPM,IE,tIn,tHoldIn,tEx,tHoldOut,vIn,vEx,TrigSens,Pressure", help="Headers for the log file", type=str)
+def log(port, baud, timeout, fpath, stream, headers):
     """Log Arduino serial data to a file.
     """
     if stream:
@@ -32,8 +33,8 @@ def log(port, baud, timeout, fpath, stream):
 
     # open a file for writing
     with open(fpath, "w") as fobj:
-        # write a header
-        fobj.write("timestamp_local,millis,enc\n")
+        # write the header
+        fobj.write("t{}\n".format(headers))
         fobj.flush()
 
         # run a loop and read/write
@@ -70,9 +71,9 @@ def test(delay, port, baud, timeout, fpath):
     # tv_options = [100, 200, 300, 400, 500, 600, 700, 800]
     # bpm_options = [10, 15, 20, 25, 30, 35, 40]
 
-    ie_options = [2, ]
-    tv_options = [250, 750]
-    bpm_options = [10, 30]
+    ie_options = [1, 4]
+    tv_options = [250, 750, 1325]
+    bpm_options = [10, 40]
 
     options = list(itertools.product(*[ie_options, tv_options, bpm_options]))
 
@@ -90,6 +91,9 @@ def test(delay, port, baud, timeout, fpath):
         sys.exit("Serial connection setup failed")
         print (e)
 
+    # pause for a second
+    time.sleep(1)
+
     # open a file for writing
     with open(fpath, "w") as fobj:
         # write a header
@@ -102,9 +106,9 @@ def test(delay, port, baud, timeout, fpath):
             # write the step to file
             fobj.write("{},{},{:.2f},{:.0f},{:.1f}\n".format(str(datetime.now()), i+1, ie_ratio, tidal_vol, bpm))
 
-            tidal_vol_cmd = "v{:d}".format(tidal_vol)
-            ie_ratio_cmd = "e{:d}".format(ie_ratio)
-            bpm_cmd = "b{:d}".format(bpm)
+            tidal_vol_cmd = "v{:d}\n".format(tidal_vol)
+            ie_ratio_cmd = "e{:d}\n".format(ie_ratio)
+            bpm_cmd = "b{:d}\n".format(bpm)
 
             # write the step to the arduino
             ser.write(tidal_vol_cmd.encode("utf-8"))
